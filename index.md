@@ -5,8 +5,12 @@ date: 2026-11-08
 
 ## 1. The $10 copy of a $1,500 bot
 
-I sell a commercial MT5 trading bot. One afternoon a buyer sent me a
-screenshot: my bot — the one I price at $1,500 — listed on a Telegram
+I sell a commercial MT5 trading bot (MT5 = MetaTrader 5, the retail
+forex/CFD terminal — if you've never touched it, think "a niche
+ecosystem of paid expert-assistant programs that run inside a trading
+platform", with its own file format, .ex5, and its own marketplace
+culture). One afternoon a buyer sent me a screenshot: my bot — the one
+I price at $1,500 — listed on a Telegram
 channel for $10, inside a "group buy" bundle of forty-plus bots.
 Crypto payments, instant delivery, a support channel of its own. The
 pirate operation looked more professional than my sales page.
@@ -132,7 +136,7 @@ symbol stripping. I shipped a build with all of it. The post-mortem:
 - Symbol stripping is real but minor — it raises the cost of the
   "curious expert" path, which was never the main threat.
 
-### 4.3 HWID locks and online license checks
+### 4.3 Hardware-ID (HWID) locks and online license checks
 
 Both are good ideas that fail alone. A HWID lock is a string
 comparison inside the process; patch it out, or read a valid HWID
@@ -154,7 +158,8 @@ which produces a failure mode worse than piracy (below).
 ### 4.5 The failure mode worse than piracy
 
 One thing I got wrong for months: my early hardening attempts made
-the binary *look like malware* to heuristic AV engines. When your
+the binary *look like malware* to heuristic antivirus (AV) engines.
+When your
 customers' terminals start quarantine-popping your product, you get
 chargebacks instead of piracy. Any defense in this space must end a
 scans clean across all major engines — not as a nice-to-have, as a
@@ -167,8 +172,8 @@ release gate. I'll return to the numbers in section 8.
 A running process leaks its memory from several directions, all
 public, all unremarkable:
 
-- Full process dumps via standard OS facilities — one API call away
-  in any tool that has existed for twenty years.
+- Full process dumps via standard operating-system facilities — one
+  API call away in any tool that has existed for twenty years.
 - Crash-style minidumps, which include heap regions and are trivially
   requested.
 - Plugin/injected readers that walk the address space from inside a
@@ -192,7 +197,8 @@ A dump of a running, licensed trading bot is embarrassingly rich:
   considers proprietary.
 - Neural weights or lookup tables, if the bot uses them — large float
   arrays with very distinctive value distributions.
-- UI strings, error messages, sometimes the vendor's own comments.
+- Interface strings, error messages, sometimes the vendor's own
+  comments.
 - The decrypted image of any packed layer, sitting there post-unpack.
 
 A pirate does not need to "understand" any of this. Pattern-matching
@@ -306,8 +312,8 @@ grant valid for exactly one session:
 - Handshake verifies the token signature and binds it to the session
   — measured at ~0.01s, i.e. free at bot startup scale.
 - A commit roundtrip confirms both sides observed the same handshake
-  (the roundtrip is byte-exact by construction; a MITM or replay
-  diverges at the first mismatched byte).
+  (the roundtrip is byte-exact by construction; a man-in-the-middle
+  or a replay diverges at the first mismatched byte).
 - A captured token is already spent. Copying a *token* from memory
   gains the pirate nothing, because the thing worth copying was never
   a reusable secret.
